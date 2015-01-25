@@ -33,6 +33,7 @@ angular
               content: content
             });
             infowindow.open(map, marker);
+            map.setCenter(marker.getPosition());
           }
         });
 
