@@ -1,9 +1,12 @@
 'use strict';
 
+var LOIR_ET_CHER_PATH;
+var finalizeSplit;
+
 angular
   .module('gmapsZoneCreatorApp')
   .directive('hatanianGmap', function () {
-    var map, newPolygons, infoWindow;
+    var map, newPolygons;
     var marker = new google.maps.Marker({
       title: 'Your test address'
     });
@@ -13,21 +16,21 @@ angular
       template: '<div></div>',
       replace: true,
       scope: {
-        addMarker: "=addMarker",
+        addMarker: '=addMarker',
         onSplitted: '&onSplitted',
         onSplittingStart: '&onSplittingStart',
         onFirstSegmentDrawn: '&onFirstSegmentDrawn'
       },
       link: function link($scope, element) {
-        $scope.$watch("addMarker", function (newValue, oldValue) {
+        $scope.$watch('addMarker', function (newValue) {
           if (newValue && newValue.lat && newValue.lng) {
             marker.setPosition(newValue);
             marker.setMap(map);
-            var content = "This address is in none of the zones !"
+            var content = 'This address is in none of the zones !';
             if (google.maps.geometry.poly.containsLocation(marker.getPosition(), newPolygons[0])) {
-              content = "This address is in zone 1 (dark blue)";
+              content = 'This address is in zone 1 (dark blue)';
             } else if (google.maps.geometry.poly.containsLocation(marker.getPosition(), newPolygons[1])) {
-              content = "This address is in zone 2 (light blue)";
+              content = 'This address is in zone 2 (light blue)';
             }
             var infowindow = new google.maps.InfoWindow({
               content: content
@@ -83,7 +86,6 @@ angular
               $scope.onSplitted();
             }
           } else {
-            console.log("Start splitting");
             newPolyline = new google.maps.Polyline({
               path: [event.latLng],
               strokeColor: '#000000',
@@ -112,37 +114,37 @@ angular
           }
         });
 
-        google.maps.event.addListener(loirEtCherPolyline, 'mouseover', function (event) {
+        google.maps.event.addListener(loirEtCherPolyline, 'mouseover', function () {
           if (!$scope.splitted) {
-            loirEtCherPolylineOptions.strokeColor = "#000000";
+            loirEtCherPolylineOptions.strokeColor = '#000000';
             loirEtCherPolyline.setOptions(loirEtCherPolylineOptions);
           }
         });
 
-        google.maps.event.addListener(loirEtCherPolyline, 'mouseout', function (event) {
+        google.maps.event.addListener(loirEtCherPolyline, 'mouseout', function () {
           if (!$scope.splitted) {
-            loirEtCherPolylineOptions.strokeColor = "#FF0000";
+            loirEtCherPolylineOptions.strokeColor = '#FF0000';
             loirEtCherPolyline.setOptions(loirEtCherPolylineOptions);
           }
         });
       }
-    }
+    };
   }
-)
-;
+);
 
-function finalizeSplit(newPolyline, loirEtCherPolygon, loirEtCherPolyline) {
+finalizeSplit = function(newPolyline, loirEtCherPolygon, loirEtCherPolyline) {
   function lineContains(lineStart, lineEnd, point) {
     var tolerance = Math.pow(map.getZoom(), -(map.getZoom() / 5));
     var segment = new google.maps.Polyline({
       path: [lineStart, lineEnd]
     });
     return google.maps.geometry.poly.isLocationOnEdge(point, segment, tolerance);
-  };
+  }
 
   var map = newPolyline.getMap();
   var newPath = newPolyline.getPath();
   var startPointLatLng = newPath.getAt(0);
+
   var endPointLatLng = newPath.getAt(newPath.getLength() - 1);
 
   var poly1 = new google.maps.Polygon({
@@ -168,7 +170,6 @@ function finalizeSplit(newPolyline, loirEtCherPolygon, loirEtCherPolyline) {
     zIndex: 0,
     map: map
   });
-
   var currentNewPoly = poly1;
   var loirEtCherPath = loirEtCherPolyline.getPath();
   var previousPoint = loirEtCherPath.getAt(loirEtCherPath.getLength() - 1);
@@ -181,8 +182,8 @@ function finalizeSplit(newPolyline, loirEtCherPolygon, loirEtCherPolyline) {
       for (var indexOfPolyline = 0; indexOfPolyline < newPolyline.getPath().getLength(); indexOfPolyline++) {
         currentNewPoly.getPath().push(newPolyline.getPath().getAt(indexOfPolyline));
       }
-      ;
-      if (currentNewPoly == poly1) {
+
+      if (currentNewPoly === poly1) {
         currentNewPoly = poly2;
       } else {
         currentNewPoly = poly1;
@@ -192,8 +193,8 @@ function finalizeSplit(newPolyline, loirEtCherPolygon, loirEtCherPolyline) {
       for (var indexOfReversePolyline = newPolyline.getPath().getLength() - 1; indexOfReversePolyline >= 0; indexOfReversePolyline--) {
         currentNewPoly.getPath().push(newPolyline.getPath().getAt(indexOfReversePolyline));
       }
-      ;
-      if (currentNewPoly == poly1) {
+
+      if (currentNewPoly === poly1) {
         currentNewPoly = poly2;
       } else {
         currentNewPoly = poly1;
@@ -205,12 +206,12 @@ function finalizeSplit(newPolyline, loirEtCherPolygon, loirEtCherPolyline) {
 
   newPolyline.setMap(null);
   loirEtCherPolygon.setMap(null);
+
   loirEtCherPolyline.setMap(null);
-
   return [poly1, poly2];
-}
+};
 
-var LOIR_ET_CHER_PATH = [
+LOIR_ET_CHER_PATH = [
   {lng: 1.26059414, lat: 47.96852404000001},
   {lng: 1.26539644, lat: 47.96285805},
   {lng: 1.29957233, lat: 47.96815754000001},
@@ -694,5 +695,5 @@ var LOIR_ET_CHER_PATH = [
   {lng: 1.24799905, lat: 47.97857120000001},
   {lng: 1.2590533, lat: 47.9718384},
   {lng: 1.26059414, lat: 47.96852404000001}
-]
+];
 

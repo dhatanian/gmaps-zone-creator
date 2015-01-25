@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <application>gmaps-zone-creator</application>
+    <version>1</version>
+    <threadsafe>true</threadsafe>
+
+    <system-properties>
+    </system-properties>
+
+    <static-files>
+        <include path="/**"/>
+    </static-files>
+
+    <ssl-enabled>true</ssl-enabled>
+</appengine-web-app>

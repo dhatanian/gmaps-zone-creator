@@ -19,18 +19,15 @@ angular.module('gmapsZoneCreatorApp')
       .hideDelay(0);
 
     $scope.startDemo = function () {
-      console.log("start");
       $scope.step = 1;
     };
 
     $scope.onSplitted = function () {
-      console.log("Splitting done, changing to next tab");
       $scope.step = 4;
       $scope.$apply();
     };
 
     $scope.onSplittingStart = function () {
-      console.log("Splitting starts, changing to next tab");
       $scope.step = 2;
       $scope.$apply();
     };
@@ -48,18 +45,16 @@ angular.module('gmapsZoneCreatorApp')
       $mdToast.show(geoCodingToast);
       geocoder.geocode({'address': $scope.testAddress.text}, function (results, status) {
         $mdToast.hide(geoCodingToast);
-        console.log("results", results);
-        console.log(status);
-        if (status == google.maps.GeocoderStatus.OK) {
+        if (status === google.maps.GeocoderStatus.OK) {
           $scope.testGeocodedAddress(results[0].geometry.location.lat(), results[0].geometry.location.lng());
           $scope.$apply();
         } else {
           var toast = $mdToast.simple()
-            .content("Geocode was not successful for the following reason: " + status)
+            .content('Geocode was not successful for the following reason: ' + status)
             .action('OK')
             .highlightAction(true);
           $mdToast.show(toast);
         }
       });
-    }
+    };
   });

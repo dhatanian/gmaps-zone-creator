@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>hatanian.david</groupId>
+    <artifactId>gmaps-zone-creator</artifactId>
+    <packaging>war</packaging>
+    <version>1.0</version>
+
+    <properties>
+    </properties>
+
+    <repositories>
+    </repositories>
+
+    <dependencies>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <archiveClasses>true</archiveClasses>
+                    <webResources>
+                        <resource>
+                            <directory>yo/dist</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>1.9.17</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
